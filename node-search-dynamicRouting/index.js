@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.get("/user/:userId", (req, res) => {
   const { userId } = req.params;
-  const user = users.find((curUser) => curUser.userId === userId); // irasant === userId get negrazina user
+  const user = users.find((curUser) => curUser.userId === userId); // irasant === userId get negrazina user reikia ieskoti pagal sukurta id userio
   console.log(user);
   console.log(userId);
   res.send(user ?? { info: "user not found" }).end();
