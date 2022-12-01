@@ -11,6 +11,7 @@ app.get("/user/:userId", (req, res) => {
   const { userId } = req.params;
   const user = users.find((curUser) => curUser.userId === userId); // irasant === userId get negrazina user
   console.log(user);
+  console.log(userId);
   res.send(user ?? { info: "user not found" }).end();
 });
 

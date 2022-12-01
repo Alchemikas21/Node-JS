@@ -1,24 +1,26 @@
-const postNewNameForm = document.querySelector("postNewNameForm");
+const postNewNameForm = document.querySelector("#postNewNameForm");
 
-postNewNameForm.addEventListener("submit", (event) => {
+postNewNameForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  //   const newName = event.target.value.trim();
 
-  const postNewName = async () => {
-    const newName = document.body
-      .querySelector("#nameInput")
-      .ariaValueMax.trim();
-    // const request =
+
+  const name2 = document.body.querySelector("#nameInput");
+  const name = name2.value.trim();
+
+  try {
     await fetch("http://localhost:5000", {
       method: "POST",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
       body: JSON.stringify({
-        name: newName,
+        name,
       }),
     });
-  };
+  } catch (error) {
+    alert(error);
+  }
 });
-
-const addNewName = postNewName();
 
 const getNames = await fetch("http://localhost:5000");
 const showNames = await getNames.json();
@@ -26,8 +28,8 @@ const showNames = await getNames.json();
 const nameList = document.querySelector("#namesList");
 
 showNames.forEach((name) => {
-  const nameELement = document.createElement("li");
+  const nameElement = document.createElement("li");
 
-  nameELement.innerText = name;
-  nameList.appendChild(nameELement, addNewName);
+  nameElement.innerText = name;
+  nameList.append(nameElement);
 });
