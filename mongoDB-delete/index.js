@@ -1,5 +1,3 @@
-//mongodb and express get/post //
-
 const express = require("express");
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
@@ -18,13 +16,14 @@ const client = new MongoClient(URI, {
 
 app.use(express.json());
 
-app.get("/users/", async (_, res) => {
+//deletina useri pagal requesto body pateikta varda ir pavarde
+app.delete("/user/delete-user", async (req, res) => {
+  const { name, surname } = req.body;
   const connection = await client.connect();
   const data = await connection
     .db(DATABASE)
     .collection(DBCOLLECTION)
-    .find()
-    .toArray();
+    .deleteOne({ name, surname });
 
   await connection.close();
 
@@ -32,9 +31,9 @@ app.get("/users/", async (_, res) => {
 });
 
 app.post("/user", async (req, res) => {
-  const { firstName, lastName } = req.body;
+  const { name, surname } = req.body;
 
-  if (typeof firstName !== "string" || typeof lastName !== "string") {
+  if (typeof name !== "string" || typeof surname !== "string") {
     res.status(400);
     res.send({ message: "first name or last name is invalid" });
     res.end;
@@ -45,13 +44,11 @@ app.post("/user", async (req, res) => {
     const dbRes = await con
       .db(DATABASE)
       .collection(DBCOLLECTION)
-      // .insertOne({ name: "Jonas", surname: "Kazlauskas" });//ivedant prie body poste iraso
-      .insertOne({ name: firstName, surname: lastName });
+      .insertMany({ name: name, surname: surname });
     await con.close();
     return res.send(dbRes);
   } catch (err) {
     res.status(500).send({ err });
   }
 });
-
 app.listen(PORT, () => console.log("server is running"));
