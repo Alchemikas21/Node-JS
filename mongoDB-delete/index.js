@@ -30,22 +30,31 @@ app.delete("/user/delete-user", async (req, res) => {
   res.send(data).end;
 });
 
+//insert many pavyzdys
 app.post("/user", async (req, res) => {
-  const { name, surname } = req.body;
+  const newUserNames = req.body;
+  const areNamesProvided = Array.isArray(newUserNames) && newUserNames?.length;
 
-  if (typeof name !== "string" || typeof surname !== "string") {
-    res.status(400);
-    res.send({ message: "first name or last name is invalid" });
-    res.end;
-    return;
+  const isCorrectUserName = (newUserNames) => {
+    const { type, item, quantity } = newUserNames;
+  };
+
+  if (!areNamesProvided) {
+    // tikrina ar paduodamas body yra arejus
+    return res.send({ message: "please provide an array with orders" }).end();
   }
+
+  newUserNames.forEach(isCorrectUserName);
+
   try {
     const con = await client.connect();
     const dbRes = await con
       .db(DATABASE)
       .collection(DBCOLLECTION)
-      .insertMany({ name: name, surname: surname });
+      .insertMany(newUserNames);
+
     await con.close();
+
     return res.send(dbRes);
   } catch (err) {
     res.status(500).send({ err });
